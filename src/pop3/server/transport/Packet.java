@@ -17,5 +17,6 @@ public class Packet {
         OutputStream out = socket.getOutputStream();
         out.write(data);
         out.flush();
+        System.out.println(String.format(">>> %s", new String(data)));
     }
 }

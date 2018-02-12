@@ -16,8 +16,13 @@ public class Sender implements Runnable {
         this.run = true;
     }
 
-    public synchronized void addPacket(Packet packet) {
+    public synchronized void sendPacket(Packet packet) {
         packets.add(packet);
+        notify();
+    }
+
+    public synchronized void stop() {
+        run = false;
         notify();
     }
 
@@ -32,7 +37,6 @@ public class Sender implements Runnable {
                         e.printStackTrace();
                     }
                 }
-                System.out.println("Waiting for packets.");
                 wait();
             }
         } catch (InterruptedException e) {
