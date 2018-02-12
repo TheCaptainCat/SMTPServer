@@ -1,14 +1,15 @@
 package pop3.server.transport;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Observable;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Receiver extends Observable implements Runnable {
-    private ServerSocket serverSocket;
+    private static final int MAX_SIZE = 1024;
+
     private int port;
     private boolean run;
     private Socket socket;
@@ -17,15 +18,28 @@ public class Receiver extends Observable implements Runnable {
     public Receiver(Socket socket) throws IOException {
         this.socket = socket;
         this.run = true;
-        this.serverSocket = new ServerSocket();
-        this.port = serverSocket.getLocalPort();
+        this.port = socket.getLocalPort();
         this.packets = new ConcurrentLinkedQueue<>();
     }
 
     @Override
     public synchronized void run() {
-        while (this.run) {
-
+        try {
+            while (this.run) {
+                System.out.println("ok");
+                byte[] data = new byte[MAX_SIZE];
+                int length;
+                StringBuilder stringBuilder = new StringBuilder();
+                BufferedInputStream buf = new BufferedInputStream(socket.getInputStream());
+                while ((length = buf.read(data)) != -1) {
+                    System.out.println("reading...");
+                    stringBuilder.append(new String(data));
+                }
+                System.out.println(stringBuilder);
+                wait();
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
