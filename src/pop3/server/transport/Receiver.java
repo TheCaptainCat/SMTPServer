@@ -1,21 +1,20 @@
 package pop3.server.transport;
 
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Observable;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Receiver extends Observable implements Runnable {
-    private static final int MAX_SIZE = 1024;
-
     private int port;
     private boolean run;
     private Socket socket;
     private Queue<Packet> packets;
 
-    public Receiver(Socket socket) throws IOException {
+    public Receiver(Socket socket) {
         this.socket = socket;
         this.run = true;
         this.port = socket.getLocalPort();
@@ -26,19 +25,12 @@ public class Receiver extends Observable implements Runnable {
     public synchronized void run() {
         try {
             while (this.run) {
-                System.out.println("ok");
-                byte[] data = new byte[MAX_SIZE];
-                int length;
-                StringBuilder stringBuilder = new StringBuilder();
-                BufferedInputStream buf = new BufferedInputStream(socket.getInputStream());
-                while ((length = buf.read(data)) != -1) {
-                    System.out.println("reading...");
-                    stringBuilder.append(new String(data));
-                }
-                System.out.println(stringBuilder);
-                wait();
+                BufferedReader buf = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                String input = buf.readLine();
+                if (input != null)
+                    System.out.println("received: " + input);
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
