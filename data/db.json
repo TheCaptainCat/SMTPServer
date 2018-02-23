@@ -1,11 +1,17 @@
 {
-  "Bob": [
-    "Hello,\nHow are you today?",
-    "Dear Bob,\nI've been sending you messages.",
-    "Hello,\nWhat about that thing?"
-  ],
-  "Jacques": [
-    "Hello Jacques!\nYou are a great boss!",
-    "WHAT THE HELL ARE YOU DOING?\nSeriously..."
-  ]
+  "Bob": {
+    "pass": "098f6bcd4621d373cade4e832627b4f6",
+    "messages": [
+      "Hello,\nHow are you today?",
+      "Dear Bob,\nI've been sending you messages.",
+      "Hello,\nWhat about that thing?"
+    ]
+  },
+  "Jacques": {
+    "pass": "098f6bcd4621d373cade4e832627b4f6",
+    "messages": [
+      "Hello Jacques!\nYou are a great boss!",
+      "WHAT THE HELL ARE YOU DOING?\nSeriously..."
+    ]
+  }
 }
