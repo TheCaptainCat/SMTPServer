@@ -10,12 +10,10 @@ public class Transaction extends State {
     public Transaction(User user, Sender sender) {
         super(sender);
         this.user = user;
-        System.out.println("Transaction");
     }
 
     @Override
     public State accept(Packet packet) {
-        System.out.printf("<<< %s%n", packet.getData());
         return this;
     }
 }

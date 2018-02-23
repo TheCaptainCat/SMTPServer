@@ -29,7 +29,9 @@ public class Receiver extends Observable implements Runnable {
                 BufferedReader buf = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String input = buf.readLine();
                 if (input != null) {
-                    packets.add(new Packet(input));
+                    Packet packet = new Packet(input);
+                    packets.add(packet);
+                    System.out.printf("<<< %s%n", packet.getData());
                     setChanged();
                     notifyObservers();
                 }

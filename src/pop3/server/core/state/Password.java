@@ -14,11 +14,12 @@ public class Password extends State {
 
     @Override
     public State accept(Packet packet) {
-        System.out.printf("<<< %s%n", packet.getData());
         String[] inputs = packet.getData().split(" ");
         if (inputs.length == 2 && inputs[0].equals("PASS") && user.verifyPassword(inputs[1])) {
+            this.sender.sendPacket(new Packet("+OK"));
             return new Transaction(user, this.sender);
         }
+        this.sender.sendPacket(new Packet("-ERR"));
         return this;
     }
 }

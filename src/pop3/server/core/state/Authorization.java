@@ -4,6 +4,8 @@ import pop3.server.database.User;
 import pop3.server.transport.Packet;
 import pop3.server.transport.Sender;
 
+import java.io.IOException;
+
 public class Authorization extends State {
 
     public Authorization(Sender sender) {
@@ -12,20 +14,26 @@ public class Authorization extends State {
 
     @Override
     public State accept(Packet packet) {
-        System.out.printf("<<< %s%n", packet.getData());
-        String[] inputs = packet.getData().split(" ");
-        if (inputs.length == 3 && inputs[0].equals("APOP")) {
-            if (User.verifyUser(inputs[1], inputs[2])) {
-                this.sender.sendPacket(new Packet("+OK"));
-                return new Transaction(new User(inputs[1]), this.sender);
-            } else {
-                this.sender.sendPacket(new Packet("-ERR"));
+        try {
+            String[] inputs = packet.getData().split(" ");
+            if (inputs.length == 3 && inputs[0].equals("APOP")) {
+                if (User.verifyUser(inputs[1], inputs[2])) {
+                    User user = new User(inputs[1]);
+                    this.sender.sendPacket(new Packet(String.format("+OK %s's mailbox has %d messages",
+                            user.getUsername(), user.getMsgCount())));
+                    return new Transaction(user, this.sender);
+                }
+            } else if (inputs.length == 2 && inputs[0].equals("USER")) {
+                if (User.verifyUsername(inputs[1])) {
+                    this.sender.sendPacket(new Packet("+OK"));
+                    return new Password(new User(inputs[1]), this.sender);
+                }
             }
-
+            this.sender.sendPacket(new Packet("-ERR"));
+            return this;
+        } catch (IOException e) {
+            this.sender.sendPacket(new Packet("-ERR"));
+            return this;
         }
-        if (inputs.length == 2 && inputs[0].equals("USER") && User.verifyUsername(inputs[1])) {
-            return new Password(new User(inputs[1]), this.sender);
-        }
-        return this;
     }
 }
