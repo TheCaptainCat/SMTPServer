@@ -5,18 +5,20 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class Packet {
-    private long length;
-    private byte[] data;
+    private String data;
 
     public Packet(String string) {
-        this.length = string.length();
-        this.data = string.getBytes();
+        this.data = string;
+    }
+
+    public String getData() {
+        return data;
     }
 
     public void send(Socket socket) throws IOException {
         OutputStream out = socket.getOutputStream();
-        out.write(data);
+        out.write(data.getBytes());
         out.flush();
-        System.out.println(String.format(">>> %s", new String(data)));
+        System.out.printf(">>> %s%n", data);
     }
 }
