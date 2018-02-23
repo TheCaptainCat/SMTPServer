@@ -6,17 +6,20 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 public class Packet {
-    private long length;
-    private byte[] data;
+    private String data;
 
     public Packet(String string) {
-        this.length = string.length();
-        this.data = (string + '\n').getBytes();
+        this.data = string;
+    }
+
+    public String getData() {
+        return data;
     }
 
     public void send(Socket socket) throws IOException {
         PrintStream out = new PrintStream(socket.getOutputStream());
-        out.write(data);
+        out.write(data.getBytes());
         out.flush();
+        System.out.printf(">>> %s%n", data);
     }
 }
