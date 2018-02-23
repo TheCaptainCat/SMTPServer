@@ -18,7 +18,7 @@ public class Connection implements Observer, Runnable {
     public Connection(Socket socket) {
         this.sender = new Sender(socket);
         this.receiver = new Receiver(socket);
-        this.state = new Authorization();
+        this.state = new Authorization(this.sender);
         this.receiver.addObserver(this);
     }
 

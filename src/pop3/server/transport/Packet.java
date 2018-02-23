@@ -18,7 +18,7 @@ public class Packet {
 
     public void send(Socket socket) throws IOException {
         PrintStream out = new PrintStream(socket.getOutputStream());
-        out.write(data.getBytes());
+        out.write((data + '\n').getBytes());
         out.flush();
         System.out.printf(">>> %s%n", data);
     }
