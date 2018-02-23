@@ -6,8 +6,10 @@ import pop3.server.transport.Sender;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Connection implements Runnable {
+public class Connection implements Runnable, Observer {
     private Socket socket;
     private Sender sender;
     private Receiver receiver;
@@ -16,6 +18,7 @@ public class Connection implements Runnable {
         this.socket = socket;
         this.sender = new Sender(socket);
         this.receiver = new Receiver(socket);
+        this.receiver.addObserver(this);
     }
 
     @Override
@@ -23,6 +26,11 @@ public class Connection implements Runnable {
         new Thread(receiver).start();
         new Thread(sender).start();
         sender.sendPacket(new Packet("+OK POP3 server ready"));
-        sender.stop();
+        //sender.stop();
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println(arg);
     }
 }

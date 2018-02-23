@@ -2,6 +2,7 @@ package pop3.server.transport;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.Socket;
 
 public class Packet {
@@ -10,13 +11,12 @@ public class Packet {
 
     public Packet(String string) {
         this.length = string.length();
-        this.data = string.getBytes();
+        this.data = (string + '\n').getBytes();
     }
 
     public void send(Socket socket) throws IOException {
-        OutputStream out = socket.getOutputStream();
+        PrintStream out = new PrintStream(socket.getOutputStream());
         out.write(data);
         out.flush();
-        System.out.println(String.format(">>> %s", new String(data)));
     }
 }
