@@ -1,13 +1,13 @@
 package pop3.server.core.state;
 
+import pop3.server.core.Connection;
 import pop3.server.database.User;
 import pop3.server.transport.Packet;
-import pop3.server.transport.Sender;
 
 public class Authorization extends State {
 
-    public Authorization(Sender sender) {
-        super(sender);
+    public Authorization(Connection connection) {
+        super(connection);
     }
 
     @Override
@@ -16,15 +16,15 @@ public class Authorization extends State {
         if (inputs.length == 3 && inputs[0].equals("APOP")) {
             if (User.verifyUser(inputs[1], inputs[2])) {
                 User user = new User(inputs[1]);
-                this.sender.sendPacket(new Packet(String.format("+OK %s's mailbox has %d messages",
+                connection.getSender().sendPacket(new Packet(String.format("+OK %s's mailbox has %d messages",
                         user.getUsername(), user.getMsgCount())));
-                return new Transaction(user, this.sender);
+                return new Transaction(user, connection);
             }
         } else if (inputs.length == 2 && inputs[0].equals("USER")) {
-            this.sender.sendPacket(new Packet("+OK"));
-            return new Password(new User(inputs[1]), this.sender);
+            connection.getSender().sendPacket(new Packet("+OK"));
+            return new Password(new User(inputs[1]), connection);
         }
-        this.sender.sendPacket(new Packet("-ERR"));
+        connection.getSender().sendPacket(new Packet("-ERR"));
         return this;
     }
 }

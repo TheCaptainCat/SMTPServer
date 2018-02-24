@@ -6,6 +6,7 @@ import pop3.server.transport.Packet;
 import pop3.server.transport.Receiver;
 import pop3.server.transport.Sender;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.Observable;
 import java.util.Observer;
@@ -18,8 +19,23 @@ public class Connection implements Observer, Runnable {
     public Connection(Socket socket) {
         this.sender = new Sender(socket);
         this.receiver = new Receiver(socket);
-        this.state = new Authorization(this.sender);
+        this.state = new Authorization(this);
         this.receiver.addObserver(this);
+    }
+
+    public Sender getSender() {
+        return sender;
+    }
+
+    public synchronized void stop() {
+        try {
+            sender.stop();
+            receiver.stop();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("Connection closed.");
+        }
     }
 
     @Override

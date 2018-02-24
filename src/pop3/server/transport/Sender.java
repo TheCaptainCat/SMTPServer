@@ -9,11 +9,13 @@ public class Sender implements Runnable {
     private Socket socket;
     private Queue<Packet> packets;
     private boolean run;
+    private boolean toQuit;
 
     public Sender(Socket socket) {
         this.socket = socket;
         this.packets = new ConcurrentLinkedQueue<>();
         this.run = true;
+        this.toQuit = false;
     }
 
     public synchronized void sendPacket(Packet packet) {
@@ -22,7 +24,7 @@ public class Sender implements Runnable {
     }
 
     public synchronized void stop() {
-        run = false;
+        toQuit = true;
         notify();
     }
 
@@ -38,9 +40,13 @@ public class Sender implements Runnable {
                     }
                 }
                 wait();
+                if (toQuit)
+                    run = false;
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } finally {
+            System.out.println("Sender closed.");
         }
     }
 }

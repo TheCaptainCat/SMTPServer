@@ -1,14 +1,14 @@
 package pop3.server.core.state;
 
+import pop3.server.core.Connection;
 import pop3.server.transport.Packet;
-import pop3.server.transport.Sender;
 
 public abstract class State {
 
-    protected Sender sender;
+    protected Connection connection;
 
-    public State(Sender sender) {
-        this.sender = sender;
+    public State(Connection connection) {
+        this.connection = connection;
     }
 
     public abstract State accept(Packet packet);
