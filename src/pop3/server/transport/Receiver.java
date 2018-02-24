@@ -25,8 +25,8 @@ public class Receiver extends Observable implements Runnable {
     @Override
     public synchronized void run() {
         try {
+            BufferedReader buf = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             while (this.run) {
-                BufferedReader buf = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String input = buf.readLine();
                 if (input != null) {
                     Packet packet = new Packet(input);
