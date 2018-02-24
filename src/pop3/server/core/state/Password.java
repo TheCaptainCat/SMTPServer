@@ -20,7 +20,7 @@ public class Password extends State {
             return new Transaction(user, this.sender);
         } else if(inputs[0].equals("QUIT")) {
             this.sender.sendPacket(new Packet("+OK dewey POP3 server signing off"));
-            return new Update(user, this.sender);
+            return this;
         }
         this.sender.sendPacket(new Packet("-ERR"));
         return new Authorization(this.sender);

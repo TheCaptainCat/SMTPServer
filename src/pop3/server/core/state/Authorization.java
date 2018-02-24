@@ -25,7 +25,7 @@ public class Authorization extends State {
             return new Password(new User(inputs[1]), this.sender);
         } else if(inputs[0].equals("QUIT")) {
             this.sender.sendPacket(new Packet("+OK dewey POP3 server signing off"));
-            return new Update(new User(inputs[1]), this.sender);
+            return this;
         }
         this.sender.sendPacket(new Packet("-ERR"));
         return this;
