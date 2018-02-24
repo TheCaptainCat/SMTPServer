@@ -16,8 +16,11 @@ public class Password extends State {
     public State accept(Packet packet) {
         String[] inputs = packet.getData().split(" ");
         if (inputs.length == 2 && inputs[0].equals("PASS") && User.verifyUser(user.getUsername(), inputs[1])) {
-            this.connection.getSender().sendPacket(new Packet("+OK"));
+            connection.getSender().sendPacket(new Packet("+OK"));
             return new Transaction(user, this.connection);
+        } else if(inputs[0].equals("QUIT")) {
+            connection.getSender().sendPacket(new Packet("+OK dewey POP3 server signing off"));
+            return this;
         }
         this.connection.getSender().sendPacket(new Packet("-ERR"));
         return new Authorization(this.connection);
