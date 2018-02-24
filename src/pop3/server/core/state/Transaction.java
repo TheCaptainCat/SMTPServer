@@ -29,16 +29,31 @@ public class Transaction extends State {
             } else {
                 this.sender.sendPacket(new Packet(String.format("+OK %d messages", user.getMsgCount())));
                 for (Message message : user.getMessages()) {
-                    this.sender.sendPacket(new Packet(String.format("%d %d",
-                            message.getId(), message.getBody().length())));
+                    if(!message.getDelete()) {
+                        this.sender.sendPacket(new Packet(String.format("%d %d",
+                                message.getId(), message.getBody().length())));
+                    }
                 }
                 this.sender.sendPacket(new Packet("."));
             }
             return this;
         } else if (inputs.length == 2 && inputs[0].equals("RETR")) {
             Message message;
-            if ((message = user.getMessage(Integer.parseInt(inputs[1]))) != null) {
+            if ((message = user.getMessage(Integer.parseInt(inputs[1]))) != null && !message.getDelete()) {
                 message.send(this.sender);
+            } else {
+                this.sender.sendPacket(new Packet("-ERR no such message"));
+            }
+            return this;
+        } else if(inputs.length == 2 && inputs[0].equals("DELE")) {
+            Message message;
+            if ((message = user.getMessage(Integer.parseInt(inputs[1]))) != null) {
+                if(!message.getDelete()) {
+                    message.switchDelete();
+                    this.sender.sendPacket(new Packet(String.format("+OK message %d deleted", message.getId())));
+                }
+                else
+                    this.sender.sendPacket(new Packet(String.format("-ERR message %d already delete", message.getId())));
             } else {
                 this.sender.sendPacket(new Packet("-ERR no such message"));
             }

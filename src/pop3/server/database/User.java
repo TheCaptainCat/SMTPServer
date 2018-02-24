@@ -16,7 +16,11 @@ public class User {
     }
 
     public int getMsgCount() {
-        return this.messages.size();
+        int count = 0;
+        for (Message message : messages)
+            if (!message.getDelete())
+                count ++;
+        return count;
     }
 
     public String getUsername() {

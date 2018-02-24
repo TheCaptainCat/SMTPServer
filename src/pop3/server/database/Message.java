@@ -14,6 +14,7 @@ public class Message {
     private String body;
     private List<String> to;
     private List<String> cc;
+    private boolean delete;
 
     public Message(LinkedTreeMap<String, String> map) {
         id = Integer.parseInt(map.get("id"));
@@ -21,6 +22,7 @@ public class Message {
         body = map.get("body");
         to = new ArrayList<>(Arrays.asList(map.get("to").split(", ")));
         cc = new ArrayList<>(Arrays.asList(map.get("cc").split(", ")));
+        delete = false;
     }
 
     public int getId() {
@@ -42,6 +44,10 @@ public class Message {
     public List<String> getCc() {
         return cc;
     }
+
+    public void switchDelete() { this.delete = !this.delete;}
+
+    public boolean getDelete() { return this.delete; }
 
     public void send(Sender sender) {
         sender.sendPacket(new Packet("+OK"));
