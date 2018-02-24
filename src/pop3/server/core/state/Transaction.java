@@ -53,19 +53,19 @@ public class Transaction extends State {
                     message.switchDelete();
                     this.sender.sendPacket(new Packet(String.format("+OK message %d deleted", message.getId())));
                 } else
-                    this.sender.sendPacket(new Packet(String.format("-ERR message %d already delete", message.getId())));
+                    this.sender.sendPacket(new Packet(String.format("-ERR message %d already deleted", message.getId())));
             } else {
                 this.sender.sendPacket(new Packet("-ERR no such message"));
             }
             return this;
-        } else if (inputs.length == 1 && inputs[0].equals("RSET")) {
+        } else if (inputs[0].equals("RSET")) {
             user.resetMessages();
             this.sender.sendPacket(new Packet(String.format("+OK mailbox has %d messages", user.getMsgCount())));
             return this;
-        } else if (inputs.length == 1 && inputs[0].equals("NOOP")) {
+        } else if (inputs[0].equals("NOOP")) {
             this.sender.sendPacket(new Packet("+OK"));
             return this;
-        } else if(inputs.length == 1 && inputs[0].equals("QUIT")) {
+        } else if(inputs[0].equals("QUIT")) {
             for (Message message : new ArrayList<>(user.getMessages())) {
                 if (message.getDelete())
                     user.getMessages().remove(message);
