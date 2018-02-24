@@ -4,6 +4,7 @@ import pop3.server.database.Message;
 import pop3.server.database.User;
 import pop3.server.transport.Packet;
 import pop3.server.transport.Sender;
+import java.util.ArrayList;
 
 public class Transaction extends State {
     private User user;
@@ -64,6 +65,16 @@ public class Transaction extends State {
         } else if (inputs.length == 1 && inputs[0].equals("NOOP")) {
             this.sender.sendPacket(new Packet("+OK"));
             return this;
+        } else if(inputs.length == 1 && inputs[0].equals("QUIT")) {
+            for (Message message : new ArrayList<>(user.getMessages())) {
+                if (message.getDelete())
+                    user.getMessages().remove(message);
+            }
+            if (user.getMsgCount() != 0)
+                this.sender.sendPacket(new Packet(String.format("+OK dewey POP3 server signing off (%d messages left)", user.getMsgCount())));
+            else
+                this.sender.sendPacket(new Packet("+OK dewey POP3 server signing off (maildrop empty)"));
+            return new Update(user, this.sender);
         }
         this.sender.sendPacket(new Packet("-ERR"));
         return this;
