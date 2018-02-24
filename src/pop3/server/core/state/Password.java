@@ -19,7 +19,7 @@ public class Password extends State {
             connection.getSender().sendPacket(new Packet("+OK"));
             return new Transaction(user, this.connection);
         } else if (inputs[0].equals("QUIT")) {
-            connection.getSender().sendPacket(new Packet("+OK dewey POP3 server signing off"));
+            connection.getSender().sendPacket(new Packet("+OK POP3 server signing off"));
             return this;
         }
         this.connection.getSender().sendPacket(new Packet("-ERR"));

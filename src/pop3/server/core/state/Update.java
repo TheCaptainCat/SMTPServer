@@ -18,9 +18,12 @@ public class Update extends State {
                 user.getMessages().remove(message);
         }
         if (user.getMsgCount() != 0)
-            connection.getSender().sendPacket(new Packet(String.format("+OK dewey POP3 server signing off (%d messages left)", user.getMsgCount())));
+            connection.getSender().sendPacket(new Packet(
+                    String.format("+OK %s POP3 server signing off (%d messages left)",
+                            user.getUsername(), user.getMsgCount())));
         else
-            connection.getSender().sendPacket(new Packet("+OK dewey POP3 server signing off (maildrop empty)"));
+            connection.getSender().sendPacket(new Packet(
+                    String.format("+OK %s POP3 server signing off (maildrop empty)", user.getUsername())));
         connection.stop();
     }
 
