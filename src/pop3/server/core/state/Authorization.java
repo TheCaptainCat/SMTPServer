@@ -23,7 +23,7 @@ public class Authorization extends State {
         } else if (inputs.length == 2 && inputs[0].equals("USER")) {
             connection.getSender().sendPacket(new Packet("+OK"));
             return new Password(new User(inputs[1]), connection);
-        } else if(inputs[0].equals("QUIT")) {
+        } else if (inputs[0].equals("QUIT")) {
             connection.getSender().sendPacket(new Packet("+OK dewey POP3 server signing off"));
             return this;
         }
