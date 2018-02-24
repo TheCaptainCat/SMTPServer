@@ -19,7 +19,7 @@ public class User {
         int count = 0;
         for (Message message : messages)
             if (!message.getDelete())
-                count ++;
+                count++;
         return count;
     }
 

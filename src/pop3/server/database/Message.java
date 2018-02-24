@@ -47,9 +47,13 @@ public class Message {
         return cc;
     }
 
-    public void switchDelete() { this.delete = !this.delete;}
+    public void switchDelete() {
+        this.delete = !this.delete;
+    }
 
-    public boolean getDelete() { return this.delete; }
+    public boolean getDelete() {
+        return this.delete;
+    }
 
     public void send(Sender sender) {
         sender.sendPacket(new Packet("+OK"));
