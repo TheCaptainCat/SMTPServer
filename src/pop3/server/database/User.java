@@ -37,4 +37,10 @@ public class User {
                 return message;
         return null;
     }
+
+    public void resetMessages() {
+        for (Message message : messages)
+            if (message.getDelete())
+                message.switchDelete();
+    }
 }

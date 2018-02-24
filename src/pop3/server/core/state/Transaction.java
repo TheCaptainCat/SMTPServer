@@ -16,7 +16,7 @@ public class Transaction extends State {
     @Override
     public State accept(Packet packet) {
         String[] inputs = packet.getData().split(" ");
-        if (inputs[0].equals("LIST") && inputs.length < 3) {
+        if (inputs.length < 3 && inputs[0].equals("LIST")) {
             if(inputs.length == 2) {
                 Message message;
                 if ((message = user.getMessage(Integer.parseInt(inputs[1]))) != null) {
@@ -58,6 +58,9 @@ public class Transaction extends State {
                 this.sender.sendPacket(new Packet("-ERR no such message"));
             }
             return this;
+        } else if(inputs.length == 1 && inputs[0].equals("RSET")) {
+            user.resetMessages();
+            this.sender.sendPacket(new Packet(String.format("+OK mailbox has %d messages", user.getMsgCount())));
         }
         this.sender.sendPacket(new Packet("-ERR"));
         return this;
