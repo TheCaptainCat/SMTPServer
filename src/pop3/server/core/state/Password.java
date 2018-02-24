@@ -18,6 +18,9 @@ public class Password extends State {
         if (inputs.length == 2 && inputs[0].equals("PASS") && User.verifyUser(user.getUsername(), inputs[1])) {
             this.sender.sendPacket(new Packet("+OK"));
             return new Transaction(user, this.sender);
+        } else if(inputs[0].equals("QUIT")) {
+            this.sender.sendPacket(new Packet("+OK dewey POP3 server signing off"));
+            return new Update(user, this.sender);
         }
         this.sender.sendPacket(new Packet("-ERR"));
         return new Authorization(this.sender);
