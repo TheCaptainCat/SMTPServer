@@ -61,8 +61,10 @@ public class Transaction extends State {
         } else if(inputs.length == 1 && inputs[0].equals("RSET")) {
             user.resetMessages();
             this.sender.sendPacket(new Packet(String.format("+OK mailbox has %d messages", user.getMsgCount())));
+            return this;
         } else if(inputs.length == 1 && inputs[0].equals("NOOP")) {
             this.sender.sendPacket(new Packet("+OK"));
+            return this;
         }
         this.sender.sendPacket(new Packet("-ERR"));
         return this;
