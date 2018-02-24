@@ -26,4 +26,8 @@ public class User {
     public List<String> getMessages() {
         return this.messages;
     }
+
+    public String getMessage(int ID) {
+        return Database.getInstance().getMessage(getUsername(), ID);
+    }
 }

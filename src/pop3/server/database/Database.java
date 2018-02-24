@@ -44,4 +44,14 @@ public class Database {
     public List<String> getMessages(String username) {
         return (List<String>) ((LinkedTreeMap<String, Object>) map.get(username)).get("messages");
     }
+
+    public String getMessage(String username, int ID) {
+        List<String> messages = this.getMessages(username);
+        try {
+            return messages.get(ID -1);
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
 }
