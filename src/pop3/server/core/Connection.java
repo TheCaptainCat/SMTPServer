@@ -20,7 +20,8 @@ public class Connection implements Observer, Runnable {
         this.sender = new Sender(socket);
         this.receiver = new Receiver(socket);
         this.state = new Authorization(this);
-        this.receiver.addObserver(this);
+        receiver.addObserver(this);
+        sender.addObserver(this);
     }
 
     public Sender getSender() {
@@ -28,14 +29,7 @@ public class Connection implements Observer, Runnable {
     }
 
     public synchronized void stop() {
-        try {
-            sender.stop();
-            receiver.stop();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            System.out.println("Connection closed.");
-        }
+        sender.stop();
     }
 
     @Override
@@ -48,9 +42,17 @@ public class Connection implements Observer, Runnable {
     @Override
     public void update(Observable observable, Object o) {
         if (observable.getClass().equals(Receiver.class)) {
-            Receiver receiver = (Receiver) observable;
             for (Packet packet : receiver.getPackets()) {
                 state = state.accept(packet);
+            }
+        }
+        if (observable.getClass().equals(Sender.class)) {
+            if (o != null && (o.equals("SENDER_CLOSED"))) {
+                try {
+                    receiver.stop();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

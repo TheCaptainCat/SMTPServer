@@ -2,10 +2,11 @@ package pop3.server.transport;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Observable;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class Sender implements Runnable {
+public class Sender extends Observable implements Runnable {
     private Socket socket;
     private Queue<Packet> packets;
     private boolean run;
@@ -39,9 +40,12 @@ public class Sender implements Runnable {
                         e.printStackTrace();
                     }
                 }
-                wait();
-                if (toQuit)
+                if (toQuit) {
                     run = false;
+                    setChanged();
+                    notifyObservers("SENDER_CLOSED");
+                } else
+                    wait();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
