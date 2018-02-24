@@ -44,6 +44,7 @@ public class Message {
     }
 
     public void send(Sender sender) {
+        sender.sendPacket(new Packet("+OK"));
         sender.sendPacket(new Packet(String.format("FROM: %s", from)));
         sender.sendPacket(new Packet(String.format("TO: %s", String.join(", ", to))));
         sender.sendPacket(new Packet(String.format("CC: %s", String.join(", ", cc))));
