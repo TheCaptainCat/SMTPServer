@@ -7,6 +7,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -41,17 +42,14 @@ public class Database {
                 && ((LinkedTreeMap<String, Object>) map.get(username)).get("pass").equals(password));
     }
 
-    public List<String> getMessages(String username) {
-        return (List<String>) ((LinkedTreeMap<String, Object>) map.get(username)).get("messages");
-    }
-
-    public String getMessage(String username, int ID) {
-        List<String> messages = this.getMessages(username);
-        try {
-            return messages.get(ID -1);
-        } catch (Exception e) {
-            return null;
+    public List<Message> getMessages(String username) {
+        List<LinkedTreeMap<String, String>> l =
+                (List<LinkedTreeMap<String, String>>)
+                        ((LinkedTreeMap<String, Object>) map.get(username)).get("messages");
+        List<Message> messages = new ArrayList<>();
+        for (LinkedTreeMap<String, String> map : l) {
+            messages.add(new Message(map));
         }
-
+        return messages;
     }
 }

@@ -1,5 +1,6 @@
 package pop3.server.core.state;
 
+import pop3.server.database.Message;
 import pop3.server.database.User;
 import pop3.server.transport.Packet;
 import pop3.server.transport.Sender;
@@ -17,24 +18,24 @@ public class Transaction extends State {
         String[] inputs = packet.getData().split(" ");
         if (inputs[0].equals("LIST") && inputs.length < 3) {
             if(inputs.length == 2) {
-                if (user.getMessages().contains(user.getMessage(Integer.parseInt(inputs[1])))) {
-                    int ID = Integer.parseInt(inputs[1]);
+                Message message;
+                if ((message = user.getMessage(Integer.parseInt(inputs[1]))) != null) {
                     this.sender.sendPacket(new Packet(String.format("+OK %d %d",
-                            ID, user.getMessage(ID).length())));
+                            message.getId(), message.getBody().length())));
                 }
                 else {
-                    this.sender.sendPacket(new Packet((String.format("-ERR no such message, only %d messages in maildrop",
-                            user.getMsgCount()))));
+                    this.sender.sendPacket(new Packet("-ERR no such message"));
                     return this;
                 }
             }
             else {
                 this.sender.sendPacket(new Packet(String.format("+OK %d messages",
                         user.getMsgCount())));
-                for(int i = 1 ; i <= user.getMsgCount(); i++) {
+                for (Message message : user.getMessages()) {
                     this.sender.sendPacket(new Packet(String.format("%d %d",
-                            i, user.getMessage(i).length())));
+                            message.getId(), message.getBody().length())));
                 }
+                this.sender.sendPacket(new Packet("."));
             }
             return this;
         } else if (inputs.length == 2 && inputs[0].equals("RETR")) {

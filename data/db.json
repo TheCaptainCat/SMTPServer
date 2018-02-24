@@ -2,16 +2,51 @@
   "Bob": {
     "pass": "098f6bcd4621d373cade4e832627b4f6",
     "messages": [
-      "Hello,\nHow are you today?",
-      "Dear Bob,\nI've been sending you messages.",
-      "Hello,\nWhat about that thing?"
+      {
+        "id": "30",
+        "from": "Jacques <jacques@test.com>",
+        "to": "Bob <bob@test.com>, Paul <paul@test.com>",
+        "cc": "Martin <martin@test.com>",
+        "subject": "Hello",
+        "body": "Hello,\nHow are you today?"
+      },
+      {
+        "id": "54",
+        "from": "Jacques <jacques@test.com>",
+        "to": "Bob <bob@test.com>",
+        "cc": "Martin <martin@test.com>, Paul <paul@test.com>",
+        "subject": "Hey Bob",
+        "body": "Dear Bob,\nI've been sending you messages."
+      },
+      {
+        "id": "64",
+        "from": "Jacques <jacques@test.com>",
+        "to": "Martin <martin@test.com>",
+        "cc": "Bob <bob@test.com>, Paul <paul@test.com>",
+        "subject": "Yo Martin",
+        "body": "Hello,\nWhat about that thing?"
+      }
     ]
   },
   "Jacques": {
     "pass": "098f6bcd4621d373cade4e832627b4f6",
     "messages": [
-      "Hello Jacques!\nYou are a great boss!",
-      "WHAT THE HELL ARE YOU DOING?\nSeriously..."
+      {
+        "id": "30",
+        "from": "Bob <bob@test.com>",
+        "to": "Jacques <jacques@test.com>, Paul <paul@test.com>",
+        "cc": "Martin <martin@test.com>",
+        "subject": "Dear Jacques",
+        "body": "Hello Jacques!\nYou are a great boss!"
+      },
+      {
+        "id": "54",
+        "from": "Bob <bob@test.com>",
+        "to": "Jacques <jacques@test.com>",
+        "cc": "Martin <martin@test.com>, Paul <paul@test.com>",
+        "subject": "WTF Jacques?!?",
+        "body": "WHAT THE HELL ARE YOU DOING?\nSeriously..."
+      }
     ]
   }
 }

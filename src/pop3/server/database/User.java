@@ -4,7 +4,7 @@ import java.util.List;
 
 public class User {
     private String username;
-    private List<String> messages;
+    private List<Message> messages;
 
     public User(String username) {
         this.username = username;
@@ -23,11 +23,14 @@ public class User {
         return username;
     }
 
-    public List<String> getMessages() {
+    public List<Message> getMessages() {
         return this.messages;
     }
 
-    public String getMessage(int ID) {
-        return Database.getInstance().getMessage(getUsername(), ID);
+    public Message getMessage(int id) {
+        for (Message message : messages)
+            if (message.getId() == id)
+                return message;
+        return null;
     }
 }
