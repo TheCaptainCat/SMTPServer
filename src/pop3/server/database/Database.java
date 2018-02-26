@@ -9,12 +9,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 @SuppressWarnings("unchecked")
 public class Database {
     private static Database INSTANCE = null;
     private LinkedTreeMap<String, Object> map;
+    private Map<String, List<Message>> messages;
 
     private Database() throws IOException {
         Gson gson = new GsonBuilder().create();
@@ -23,7 +25,19 @@ public class Database {
         for (Object s : lines.toArray()) {
             json.append((String) s);
         }
-        map = gson.fromJson(json.toString(), LinkedTreeMap.class);
+        this.map = gson.fromJson(json.toString(), LinkedTreeMap.class);
+        this.messages = new LinkedTreeMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String username = entry.getKey();
+            List<LinkedTreeMap<String, String>> l =
+                    (List<LinkedTreeMap<String, String>>)
+                            ((LinkedTreeMap<String, Object>) this.map.get(username)).get("messages");
+            List<Message> m = new ArrayList<>();
+            for (LinkedTreeMap<String, String> map : l) {
+                m.add(new Message(map));
+            }
+            this.messages.put(username, m);
+        }
     }
 
     public static Database getInstance() {
@@ -43,13 +57,6 @@ public class Database {
     }
 
     public List<Message> getMessages(String username) {
-        List<LinkedTreeMap<String, String>> l =
-                (List<LinkedTreeMap<String, String>>)
-                        ((LinkedTreeMap<String, Object>) map.get(username)).get("messages");
-        List<Message> messages = new ArrayList<>();
-        for (LinkedTreeMap<String, String> map : l) {
-            messages.add(new Message(map));
-        }
-        return messages;
+        return messages.get(username);
     }
 }
