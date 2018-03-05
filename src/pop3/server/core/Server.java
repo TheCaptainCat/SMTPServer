@@ -5,14 +5,30 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
 
 public class Server implements Runnable {
     private final int port;
-    private final ServerSocket serverSocket;
+    private final SSLServerSocket  serverSocket;
 
     public Server(int port) throws IOException {
         this.port = port;
-        this.serverSocket = new ServerSocket(port);
+        SSLServerSocketFactory factory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+        this.serverSocket = (SSLServerSocket) factory.createServerSocket(port);
+        this.serverSocket.setEnabledCipherSuites(getAnonOnly(this.serverSocket.getSupportedCipherSuites()));
+    }
+
+    private String[] getAnonOnly(String[] suites) {
+        List<String> resultList = new ArrayList<>();
+        for (String s : suites) {
+            if (s.contains("anon")) {
+                resultList.add(s);
+            }
+        }
+        return resultList.toArray( new String[resultList.size()]);
     }
 
     @Override
@@ -21,7 +37,7 @@ public class Server implements Runnable {
             System.out.println(String.format("Server started.\nAddress: %s.\nListening on port %d.",
                     InetAddress.getLocalHost(), port));
         } catch (UnknownHostException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
         while (true) {
             try {
@@ -30,7 +46,7 @@ public class Server implements Runnable {
                 System.out.println("Connection accepted.");
                 new Thread(new Connection(socket)).start();
             } catch (IOException ex) {
-                ex.printStackTrace();
+                //ex.printStackTrace();
             }
         }
     }

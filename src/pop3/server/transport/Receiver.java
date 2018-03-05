@@ -1,5 +1,6 @@
 package pop3.server.transport;
 
+import javax.net.ssl.SSLHandshakeException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,6 +12,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Receiver extends Observable implements Runnable {
+
     private boolean run;
     private Socket socket;
     private Queue<Packet> packets;
@@ -47,7 +49,13 @@ public class Receiver extends Observable implements Runnable {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            if(e instanceof SSLHandshakeException) {
+                System.out.println("No cipher suites in common with this client.");
+                setChanged();
+                notifyObservers("NO_CIPHER_SUITES");
+            } else {
+                //e.printStackTrace();
+            }
         } finally {
             System.out.println("Receiver closed.");
         }
@@ -60,4 +68,8 @@ public class Receiver extends Observable implements Runnable {
         }
         return packets;
     }
+    public boolean isRun() {
+        return run;
+    }
+
 }

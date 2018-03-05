@@ -29,7 +29,7 @@ public class Connection implements Observer, Runnable {
     }
 
     public synchronized void stop() {
-        sender.stop();
+        sender.toQuit();
     }
 
     @Override
@@ -40,10 +40,14 @@ public class Connection implements Observer, Runnable {
     }
 
     @Override
-    public void update(Observable observable, Object o) {
+    public synchronized void update(Observable observable, Object o) {
         if (observable.getClass().equals(Receiver.class)) {
-            for (Packet packet : receiver.getPackets()) {
-                state = state.accept(packet);
+            if(o != null && o.equals("NO_CIPHER_SUITES")) {
+                sender.stop();
+            } else {
+                for (Packet packet : receiver.getPackets()) {
+                    state = state.accept(packet);
+                }
             }
         }
         if (observable.getClass().equals(Sender.class)) {
@@ -51,7 +55,7 @@ public class Connection implements Observer, Runnable {
                 try {
                     receiver.stop();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
         }

@@ -24,8 +24,13 @@ public class Sender extends Observable implements Runnable {
         notify();
     }
 
-    public synchronized void stop() {
+    public synchronized void toQuit() {
         toQuit = true;
+        notify();
+    }
+
+    public synchronized void stop() {
+        this.run = false;
         notify();
     }
 
@@ -48,7 +53,7 @@ public class Sender extends Observable implements Runnable {
                     wait();
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } finally {
             System.out.println("Sender closed.");
         }
