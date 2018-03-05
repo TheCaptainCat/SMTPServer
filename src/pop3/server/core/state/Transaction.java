@@ -1,6 +1,7 @@
 package pop3.server.core.state;
 
 import pop3.server.core.Connection;
+import pop3.server.core.command.List;
 import pop3.server.database.Message;
 import pop3.server.database.User;
 import pop3.server.transport.Packet;
@@ -11,32 +12,14 @@ public class Transaction extends State {
     public Transaction(User user, Connection connection) {
         super(connection);
         this.user = user;
+        commands.put("LIST", new List(this, connection, user));
     }
 
     @Override
     public State accept(Packet packet) {
         String[] inputs = packet.getData().split(" ");
         if (inputs.length < 3 && inputs[0].equals("LIST")) {
-            if (inputs.length == 2) {
-                Message message;
-                if ((message = user.getMessage(Integer.parseInt(inputs[1]))) != null) {
-                    connection.getSender().sendPacket(new Packet(String.format("+OK %d %d",
-                            message.getId(), message.getBody().length())));
-                } else {
-                    connection.getSender().sendPacket(new Packet("-ERR no such message"));
-                    return this;
-                }
-            } else {
-                connection.getSender().sendPacket(new Packet(String.format("+OK %d messages", user.getMsgCount())));
-                for (Message message : user.getMessages()) {
-                    if (!message.getDelete()) {
-                        connection.getSender().sendPacket(new Packet(String.format("%d %d",
-                                message.getId(), message.getBody().length())));
-                    }
-                }
-                connection.getSender().sendPacket(new Packet("."));
-            }
-            return this;
+            return commands.get("LIST").execute(inputs);
         } else if (inputs.length == 2 && inputs[0].equals("RETR")) {
             Message message;
             if ((message = user.getMessage(Integer.parseInt(inputs[1]))) != null && !message.getDelete()) {
