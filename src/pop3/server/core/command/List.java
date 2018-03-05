@@ -13,7 +13,7 @@ public class List extends Command {
 
     @Override
     public State execute(String[] args) {
-        if (args.length == 3) {
+        if (args.length == 1) {
             connection.getSender().sendPacket(new Packet(String.format("+OK %d messages", user.getMsgCount())));
             for (Message message : user.getMessages()) {
                 if (!message.getDelete()) {

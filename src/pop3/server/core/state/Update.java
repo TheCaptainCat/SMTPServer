@@ -26,9 +26,4 @@ public class Update extends State {
                     String.format("+OK %s POP3 server signing off (maildrop empty)", user.getUsername())));
         connection.stop();
     }
-
-    @Override
-    public State accept(Packet packet) {
-        return this;
-    }
 }

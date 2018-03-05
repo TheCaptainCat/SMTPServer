@@ -16,5 +16,13 @@ public abstract class State {
         this.commands = new HashMap<>();
     }
 
-    public abstract State accept(Packet packet);
+    public State accept(Packet packet) {
+        String[] inputs = packet.getData().split(" ");
+        Command command;
+        if ((command = commands.get(inputs[0])) != null) {
+            return command.execute(inputs);
+        }
+        connection.getSender().sendPacket(new Packet("-ERR"));
+        return this;
+    }
 }
