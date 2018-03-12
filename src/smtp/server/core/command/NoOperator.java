@@ -2,12 +2,11 @@ package smtp.server.core.command;
 
 import smtp.server.core.Connection;
 import smtp.server.core.state.State;
-import smtp.server.database.User;
 import smtp.server.transport.Packet;
 
 public class NoOperator extends Command {
-    public NoOperator(State state, Connection connection, User user) {
-        super(state, connection, user);
+    public NoOperator(State state, Connection connection) {
+        super(state, connection);
     }
 
     @Override

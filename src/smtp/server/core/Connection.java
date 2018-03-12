@@ -1,7 +1,7 @@
 package smtp.server.core;
 
-import smtp.server.core.state.Authorization;
 import smtp.server.core.state.State;
+import smtp.server.core.state.Waiting;
 import smtp.server.transport.Packet;
 import smtp.server.transport.Receiver;
 import smtp.server.transport.Sender;
@@ -19,7 +19,7 @@ public class Connection implements Observer, Runnable {
     public Connection(Socket socket) {
         this.sender = new Sender(socket);
         this.receiver = new Receiver(socket);
-        this.state = new Authorization(this);
+        this.state = new Waiting(this);
         receiver.addObserver(this);
         sender.addObserver(this);
     }
@@ -36,7 +36,7 @@ public class Connection implements Observer, Runnable {
     public void run() {
         new Thread(receiver).start();
         new Thread(sender).start();
-        sender.sendPacket(new Packet("+OK POP3 server ready"));
+        sender.sendPacket(new Packet("+OK polyp.com Simple Mail Transfer Service Ready"));
     }
 
     @Override

@@ -1,46 +1,14 @@
 package smtp.server.database;
 
-import java.util.List;
-
 public class User {
-    private String username;
-    private List<Message> messages;
+    private String address;
 
-    public User(String username) {
-        this.username = username;
-        this.messages = Database.getInstance().getMessages(username);
+    public User(String raw) {
+        this.address = raw.substring(1, raw.length() - 1);
     }
 
-    public static boolean verifyUser(String username, String password) {
-        return Database.getInstance().checkUserPass(username, password);
-    }
-
-    public int getMsgCount() {
-        int count = 0;
-        for (Message message : messages)
-            if (!message.getDelete())
-                count++;
-        return count;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public List<Message> getMessages() {
-        return this.messages;
-    }
-
-    public Message getMessage(int id) {
-        for (Message message : messages)
-            if (message.getId() == id)
-                return message;
-        return null;
-    }
-
-    public void resetMessages() {
-        for (Message message : messages)
-            if (message.getDelete())
-                message.switchDelete();
+    @Override
+    public String toString() {
+        return String.format("<%s>", address);
     }
 }
