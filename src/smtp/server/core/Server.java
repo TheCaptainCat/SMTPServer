@@ -40,7 +40,7 @@ public class Server implements Runnable {
         }
         while (true) {
             try {
-                System.out.println("Waiting for a connection.");
+                System.out.println("Initialization for a connection.");
                 Socket socket = serverSocket.accept();
                 System.out.println("Connection accepted.");
                 new Thread(new Connection(socket)).start();

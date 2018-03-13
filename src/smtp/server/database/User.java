@@ -3,6 +3,10 @@ package smtp.server.database;
 public class User {
     private String address;
 
+    public String getAddress() {
+        return address;
+    }
+
     public User(String raw) {
         this.address = raw.substring(1, raw.length() - 1);
     }

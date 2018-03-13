@@ -2,6 +2,7 @@ package smtp.server.core.command;
 
 import smtp.server.core.Connection;
 import smtp.server.core.state.State;
+import smtp.server.core.state.Terminating;
 
 public class Quit extends Command {
     public Quit(State state, Connection connection) {
@@ -10,6 +11,6 @@ public class Quit extends Command {
 
     @Override
     public State execute(String[] args) {
-        return this.state;
+        return new Terminating(connection);
     }
 }

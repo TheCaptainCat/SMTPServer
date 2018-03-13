@@ -1,7 +1,7 @@
 package smtp.server.core;
 
+import smtp.server.core.state.Initialization;
 import smtp.server.core.state.State;
-import smtp.server.core.state.Waiting;
 import smtp.server.transport.Packet;
 import smtp.server.transport.Receiver;
 import smtp.server.transport.Sender;
@@ -19,7 +19,7 @@ public class Connection implements Observer, Runnable {
     public Connection(Socket socket) {
         this.sender = new Sender(socket);
         this.receiver = new Receiver(socket);
-        this.state = new Waiting(this);
+        this.state = new Initialization(this);
         receiver.addObserver(this);
         sender.addObserver(this);
     }
