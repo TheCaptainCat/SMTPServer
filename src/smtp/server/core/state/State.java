@@ -22,7 +22,10 @@ public abstract class State {
         if ((command = commands.get(inputs[0])) != null) {
             return command.execute(inputs);
         }
-        connection.getSender().sendPacket(new Packet("-ERR"));
+        if ((command = commands.get("*")) != null) {
+            return command.execute(new String[]{packet.getData()});
+        }
+        connection.getSender().sendPacket(new Packet("550 Bad request"));
         return this;
     }
 }

@@ -42,4 +42,8 @@ public class Transaction {
         }
         return false;
     }
+
+    public void addData(String data) {
+        this.data.add(data);
+    }
 }
