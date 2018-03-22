@@ -4,6 +4,7 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -11,13 +12,11 @@ import java.util.List;
 
 public class Server implements Runnable {
     private final int port;
-    private final SSLServerSocket serverSocket;
+    private final ServerSocket serverSocket;
 
     public Server(int port) throws IOException {
         this.port = port;
-        SSLServerSocketFactory factory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-        this.serverSocket = (SSLServerSocket) factory.createServerSocket(port);
-        this.serverSocket.setEnabledCipherSuites(getAnonOnly(this.serverSocket.getSupportedCipherSuites()));
+        this.serverSocket = new ServerSocket(1337);
     }
 
     private String[] getAnonOnly(String[] suites) {

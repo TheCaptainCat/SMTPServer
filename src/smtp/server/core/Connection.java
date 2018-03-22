@@ -53,7 +53,7 @@ public class Connection implements Observer, Runnable {
     public void run() {
         new Thread(receiver).start();
         new Thread(sender).start();
-        sender.sendPacket(new Packet(String.format("+OK %s Simple Mail Transfer Service Ready", address)));
+        sender.sendPacket(new Packet(String.format("220 %s Simple Mail Transfer Service Ready", address)));
     }
 
     @Override
