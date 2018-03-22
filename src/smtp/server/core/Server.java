@@ -1,7 +1,5 @@
 package smtp.server.core;
 
-import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -13,10 +11,12 @@ import java.util.List;
 public class Server implements Runnable {
     private final int port;
     private final ServerSocket serverSocket;
+    private final String address;
 
-    public Server(int port) throws IOException {
+    public Server(int port, String address) throws IOException {
         this.port = port;
-        this.serverSocket = new ServerSocket(1337);
+        this.address = address;
+        this.serverSocket = new ServerSocket(port);
     }
 
     private String[] getAnonOnly(String[] suites) {
@@ -32,8 +32,8 @@ public class Server implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println(String.format("Server started.\nAddress: %s.\nListening on port %d.",
-                    InetAddress.getLocalHost(), port));
+            System.out.println(String.format("Server \"%s\" started.\nAddress: %s.\nListening on port %d.",
+                    address, InetAddress.getLocalHost(), port));
         } catch (UnknownHostException ex) {
             //ex.printStackTrace();
         }
@@ -42,7 +42,7 @@ public class Server implements Runnable {
                 System.out.println("Initialization for a connection.");
                 Socket socket = serverSocket.accept();
                 System.out.println("Connection accepted.");
-                new Thread(new Connection(socket)).start();
+                new Thread(new Connection(socket, address)).start();
             } catch (IOException ex) {
                 //ex.printStackTrace();
             }

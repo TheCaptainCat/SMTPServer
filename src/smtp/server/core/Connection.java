@@ -20,17 +20,17 @@ public class Connection implements Observer, Runnable {
     private State state;
     private Users users;
 
-    public Connection(Socket socket) {
-        this.address = "polyp.com";
+    public Connection(Socket socket, String address) {
+        this.address = address;
         this.sender = new Sender(socket);
         this.receiver = new Receiver(socket);
         this.state = new Initialization(this);
         receiver.addObserver(this);
         sender.addObserver(this);
         this.users = new Users();
-        users.addUser(new User("<Bob@polyp.com>"));
-        users.addUser(new User("<Jacques@polyp.com>"));
-        users.addUser(new User("<Martin@polyp.com>"));
+        users.addUser(new User(String.format("<Bob@%s>", address)));
+        users.addUser(new User(String.format("<Jacques@%s>", address)));
+        users.addUser(new User(String.format("<Martin@%s>", address)));
     }
 
     public Sender getSender() {
